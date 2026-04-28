@@ -17,7 +17,7 @@ export const initializeSocketServer = (httpServer: HttpServer) => {
 		"http://localhost:5173",
 		"https://localhost:8081",
 		process.env.FRONTEND_URL as string,
-	];
+	].filter(Boolean); // Filter out any undefined values
 
 	const io = new SocketServer(httpServer, {
 		cors: { origin: allowedOrigins },
@@ -39,7 +39,7 @@ export const initializeSocketServer = (httpServer: HttpServer) => {
 			if (!user) {
 				return next(new Error("Authentication error: User not found"));
 			}
-			(socket as AuthenticatedSocket).userId = user._id.toString(); // Attach the user ID to the socket for later use
+			socket.data.userId = user._id.toString(); // Attach the user ID to the socket for later use
 			next();
 		} catch (error) {
 			return next(new Error("Authentication error: Invalid token"));
@@ -48,7 +48,7 @@ export const initializeSocketServer = (httpServer: HttpServer) => {
 
 	// connection is the event name and socket is the user that is connecting to the server
 	io.on("connection", (socket) => {
-		const userId = (socket as AuthenticatedSocket).userId;
+		const userId = socket.data.userId;
 
 		// send list of connected users to the client
 		socket.emit("online-users", { userIds: Array.from(onlineUsers.keys()) });
@@ -94,7 +94,7 @@ export const initializeSocketServer = (httpServer: HttpServer) => {
 					chat.lastMessageAt = new Date();
 					await chat.save();
 
-					await message.populate("sender", "name email");
+					await message.populate("sender", "name avatar");
 
 					// emit to the participants in the chat
 					io.to(`chat:${chatId}`).emit("new-message", message);
