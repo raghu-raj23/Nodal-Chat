@@ -1,5 +1,52 @@
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/preflight.css" layer(base);
 @import "tailwindcss/utilities.css";
- 
 @import "nativewind/theme";
+
+@theme {
+	/* Primary: Bright Peach & Terracotta */
+	--color-primary-DEFAULT: #ffb5a7; /* Vibrant Pastel Peach */
+	--color-primary-light: #fcd5ce; /* Apricot Cream */
+	--color-primary-dark: #cd7b68; /* Sun-baked Rust */
+	--color-primary-soft: #5e4e4a; /* Warm Earthy Shadow */
+
+	/* Surface: Rich Cocoa & Warm Slate */
+	/* These are "lighter" darks to avoid that heavy black feeling */
+	--color-surface-DEFAULT: #352f2d; /* Warm Coffee/Cocoa */
+	--color-surface-light: #463f3a; /* Muted Walnut */
+	--color-surface-dark: #2b2523; /* Deep Mahogany */
+	--color-surface-card: #4a423f; /* Warm Stone */
+
+	/* Accents: Forest Sage & Golden Sand */
+	--color-accent-forest: #95d5b2; /* Minty Forest (pops against brown) */
+	--color-accent-gold: #f2cc8f; /* Harvest Gold */
+
+	/* Typography: Soft Linen & Ivory */
+	--color-foreground: #fefae0; /* Glowing Cornsilk/Ivory */
+	--color-muted-foreground: #d4a373; /* Buff/Tan (Warm text) */
+	--color-subtle-foreground: #8a817c; /* Dusty Bark */
+}
+
+:root {
+	/* Primary: Bright Peach & Terracotta */
+	--color-primary-DEFAULT: #ffb5a7; /* Vibrant Pastel Peach */
+	--color-primary-light: #fcd5ce; /* Apricot Cream */
+	--color-primary-dark: #cd7b68; /* Sun-baked Rust */
+	--color-primary-soft: #5e4e4a; /* Warm Earthy Shadow */
+
+	/* Surface: Rich Cocoa & Warm Slate */
+	/* These are "lighter" darks to avoid that heavy black feeling */
+	--color-surface-DEFAULT: #352f2d; /* Warm Coffee/Cocoa */
+	--color-surface-light: #463f3a; /* Muted Walnut */
+	--color-surface-dark: #2b2523; /* Deep Mahogany */
+	--color-surface-card: #4a423f; /* Warm Stone */
+
+	/* Accents: Forest Sage & Golden Sand */
+	--color-accent-forest: #95d5b2; /* Minty Forest (pops against brown) */
+	--color-accent-gold: #f2cc8f; /* Harvest Gold */
+
+	/* Typography: Soft Linen & Ivory */
+	--color-foreground: #fefae0; /* Glowing Cornsilk/Ivory */
+	--color-muted-foreground: #d4a373; /* Buff/Tan (Warm text) */
+	--color-subtle-foreground: #8a817c; /* Dusty Bark */
+}
