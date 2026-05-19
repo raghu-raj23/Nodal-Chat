@@ -17,7 +17,7 @@ const AuthSync = () => {
 				onSuccess: (data) => {
 					Sentry.logger.info(
 						Sentry.logger.fmt`User synced with backend: ${data.name}`,
-						{ userId: data.id, userName: data.name },
+						{ userId: data?._id, userName: data.name },
 					);
 				},
 				onError: (error) => {
