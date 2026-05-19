@@ -1,65 +1,55 @@
 import { useAuth } from "@clerk/expo";
-import { create } from "axios";
-import { useEffect } from "react";
+import axios from "axios";
+import { useCallback } from "react";
 import * as Sentry from "@sentry/react-native";
 
 const API_URL = "https://nodal-chat.onrender.com/api";
 
-const api = create({
+const api = axios.create({
 	baseURL: API_URL,
-	headers: {
-		"Content-Type": "application/json",
-	},
+	headers: { "Content-Type": "application/json" },
 });
+
+// Response interceptor registered once
+api.interceptors.response.use(
+	(response) => response,
+	(error) => {
+		if (error.response) {
+			Sentry.logger.error(
+				Sentry.logger
+					.fmt`API request failed: ${error.config?.method?.toUpperCase()} ${error.config?.url}`,
+				{
+					status: error.response.status,
+					endpoint: error.config?.url,
+					method: error.config?.method,
+				},
+			);
+		} else if (error.request) {
+			Sentry.logger.warn("API request failed - no response", {
+				endpoint: error.config?.url,
+				method: error.config?.method,
+			});
+		}
+		return Promise.reject(error);
+	},
+);
 
 export const useApi = () => {
 	const { getToken } = useAuth();
 
-	useEffect(() => {
-		const requestIterceptor = api.interceptors.request.use(async (config) => {
+	const apiWithAuth = useCallback(
+		async <T>(config: Parameters<typeof api.request>[0]) => {
 			const token = await getToken();
+			return api.request<T>({
+				...config,
+				headers: {
+					...config.headers,
+					...(token && { Authorization: `Bearer ${token}` }),
+				},
+			});
+		},
+		[getToken],
+	);
 
-			if (token) {
-				config.headers.Authorization = `Bearer ${token}`;
-			}
-
-			return config;
-		});
-
-		const responseInterceptor = api.interceptors.response.use(
-			(response) => response,
-			(error) => {
-				// Log api errors to Sentry
-				if (error.response) {
-					// Server responded with a status other than 2xx
-					Sentry.logger.error(
-						Sentry.logger
-							.fmt`API request failed: ${error.config.method.toUpperCase()} ${error.config?.url}`,
-						{
-							status: error.response.status,
-							endpoint: error.config.url,
-							method: error.config.method,
-						},
-					);
-				} else if (error.request) {
-					// Request was made but no response received
-					Sentry.logger.warn(
-						Sentry.logger.fmt`API Error: No response received`,
-						{
-							endpoint: error.config.url,
-							method: error.config.method,
-						},
-					);
-				} else {
-					return Promise.reject(error);
-				}
-			},
-		);
-		// Cleanup: remove interceptors when component unmounts
-		return () => {
-			api.interceptors.request.eject(requestIterceptor);
-			api.interceptors.response.eject(responseInterceptor);
-		};
-	}, [getToken]);
-	return api;
+	return { api, apiWithAuth };
 };
