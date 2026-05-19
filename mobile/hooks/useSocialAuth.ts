@@ -4,10 +4,12 @@ import { Alert } from "react-native";
 
 function useAuthSocial() {
 	const [loadingStrategy, setLoadingStrategy] = useState<
-		"oauth_google" | "oauth_apple" | null
+		"oauth_google" | "oauth_apple" | "oauth_github" | null
 	>(null);
 	const { startSSOFlow } = useSSO();
-	const handleSocialAuth = async (strategy: "oauth_google" | "oauth_apple") => {
+	const handleSocialAuth = async (
+		strategy: "oauth_google" | "oauth_apple" | "oauth_github",
+	) => {
 		if (loadingStrategy) return;
 		setLoadingStrategy(strategy);
 

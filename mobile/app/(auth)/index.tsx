@@ -82,6 +82,21 @@ const AuthScreen = () => {
 							</>
 						)}
 					</Pressable>
+					<Pressable
+						className="flex-1 flex-row items-center justify-center gap-2 bg-white/10 py-4 rounded-2xl border border-white/20 active:scale-[0.97]"
+						disabled={loadingStrategy === "oauth_github"}
+						onPress={() => {
+							handleSocialAuth("oauth_github");
+						}}>
+						{loadingStrategy === "oauth_github" ? (
+							<ActivityIndicator color="#FFFFFF" />
+						) : (
+							<>
+								<Ionicons name="logo-github" size={20} color="#FFFFFF" />
+								<Text className="text-primary">GitHub</Text>
+							</>
+						)}
+					</Pressable>
 				</View>
 			</SafeAreaView>
 		</View>
