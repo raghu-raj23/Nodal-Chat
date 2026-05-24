@@ -15,6 +15,7 @@ import Ionicons from "@expo/vector-icons/build/Ionicons";
 import ChatItem from "@/components/ChatItem";
 import EmptyUI from "@/components/EmptyUI";
 import { Chat } from "@/types";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const ChatsTab = () => {
 	const router = useRouter();
@@ -76,7 +77,7 @@ const ChatsTab = () => {
 						iconColor="#6b6b70"
 						iconSize={64}
 						buttonLabel="New Chat"
-						onPressButton={() => console.log("Pressed")}
+						onPressButton={() => router.push("/new-chat")}
 					/>
 				}
 			/>
@@ -90,19 +91,19 @@ function Header() {
 	const router = useRouter();
 
 	return (
-		<View className="px-5 pt-2 pb-4">
-			<View className="flex-row items-center justify-between">
-				<Text className="text-2xl font-bold text-foreground">Chats</Text>
-				<Pressable
-					className="size-10 bg-primary-DEFAULT rounded-full items-center justify-center"
-					//   onPress={() => router.push("/new-chat")}
-				>
-					<Ionicons name="create-outline" size={20} color="#463f3a" />
-				</Pressable>
+		// <SafeAreaView>
+			<View className="px-5 pt-2 pb-4">
+				<View className="flex-row items-center justify-between">
+					<Text className="text-2xl font-bold text-foreground">Chats</Text>
+					<Pressable
+						className="size-10 bg-primary-DEFAULT rounded-full items-center justify-center"
+						onPress={() => router.push("/new-chat")}>
+						<Ionicons name="create-outline" size={20} color="#463f3a" />
+					</Pressable>
+				</View>
 			</View>
-		</View>
+		// {/* </SafeAreaView> */}
 	);
 }
-
 
 // 6:02
