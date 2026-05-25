@@ -1,5 +1,5 @@
 import { useApi } from "@/lib/axios";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { User } from "@/types";
 
 export const useAuthCallback = () => {
@@ -12,6 +12,21 @@ export const useAuthCallback = () => {
 				url: "/auth/callback",
 			});
 			return data;
+		},
+	});
+};
+export const useCurrentUser = () => {
+	const { apiWithAuth } = useApi();
+
+	return useQuery({
+		queryKey: ["currentUser"],
+		queryFn: async () => {
+			const { data } = await apiWithAuth<{ user: User }>({
+				method: "GET",
+				url: "/auth/me",
+			});
+			console.log("Current user from /auth/me:", data.user);
+			return data.user;
 		},
 	});
 };

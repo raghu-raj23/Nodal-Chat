@@ -3,17 +3,20 @@ import React from "react";
 import { Chat } from "@/types";
 import { Image } from "expo-image";
 import { formatDistanceToNow } from "date-fns";
+import { useSocketStore } from "@/lib/socket";
 
 const ChatItem = ({ chat, onPress }: { chat: Chat; onPress: () => void }) => {
 	const participant = chat.participant;
-	const isOnline = true;
-	const isTyping = false;
-	const hasUnread = false;
+
+	const { onlineUsers, typingUsers, unreadChats } = useSocketStore();
+	const isOnline = onlineUsers.has(participant._id);
+	const isTyping = typingUsers.get(chat._id) === participant._id;
+	const hasUnread = unreadChats.has(chat._id);
 
 	return (
 		<Pressable
 			onPress={onPress}
-			className="flex-row items-center py-3 active:opacity-70">
+			className="flex-row items-center justify-evenly py-3 active:opacity-70">
 			<View className="relative">
 				<Image
 					source={participant.avatar}
@@ -24,7 +27,7 @@ const ChatItem = ({ chat, onPress }: { chat: Chat; onPress: () => void }) => {
 				)}
 			</View>
 			<View className="flex-1 ml-4">
-				<View className="flex-row items-center justify-center">
+				<View className="flex-row items-center justify-between">
 					<Text
 						className={`text-base font-medium ${hasUnread ? "text-primary-DEFAULT" : "text-foreground"}`}>
 						{participant.name}

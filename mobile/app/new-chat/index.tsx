@@ -14,12 +14,14 @@ import { useUsers } from "@/hooks/useUsers";
 import { useGetorCreateChat } from "@/hooks/useChats";
 import { User } from "@/types";
 import UserItem from "@/components/UserItem";
+import { useSocketStore } from "@/lib/socket";
 
 const NewChatScreen = () => {
 	const [searchQuery, setSearchQuery] = React.useState("");
 	const { data: allUsers, isLoading, error } = useUsers();
 	const { mutate: getOrCreateChat, isPending: isCreatingChat } =
 		useGetorCreateChat();
+	const onlineUsers = useSocketStore((state) => state.onlineUsers);
 
 	const filteredUsers = allUsers?.filter((u) => {
 		if (!searchQuery.trim()) return true;
@@ -106,7 +108,7 @@ const NewChatScreen = () => {
 									<UserItem
 										key={user._id}
 										user={user}
-										isOnline={true}
+										isOnline={onlineUsers.has(user._id)}
 										onPress={() => handleUserSelect(user)}
 									/>
 								))}
